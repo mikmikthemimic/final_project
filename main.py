@@ -46,8 +46,8 @@ while ret:
                 x1, y1, x2, y2 = bbox
                 track_id = track.track_id
 
-                cv2.rectangle(frame, (int(x1), int(y1)), (int(x2), int(y2), 2))
-    
+                image = cv2.rectangle(frame, (int(x1), int(y1)), (int(x2), int(y2), 1))
+                
     cap_out.write(frame)
     ret, frame = cap.read()
 
