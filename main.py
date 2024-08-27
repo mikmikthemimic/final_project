@@ -22,7 +22,22 @@ tracker = Tracker()
 detection_threshold = 0.5
 
 while ret:
-    results = model(frame)
+    #results = model(frame)
+    # vv this is the same as ^^
+    model.eval()
+    for sample in dataloader_prediction:
+        x, x_name = sample
+        with torch.no_grad():
+            pred = model(x)
+            # Move tensors to CPU before converting to NumPy
+            pred = {key: value.cpu().numpy() for key, value in pred[0].items()}
+            name = pathlib.Path(x_name[0])
+            save_dir = pathlib.Path(os.getcwd()) / params["PREDICTIONS_PATH"]
+            save_dir.mkdir(parents=True, exist_ok=True)
+            pred_list = {
+                key: value.tolist() for key, value in pred.items()
+            }  # numpy arrays are not serializable -> .tolist()
+            save_json(pred_list, path=save_dir / name.with_suffix(".json"))
 
     for result in results:
         detections = []
